@@ -1326,6 +1326,7 @@ dnl Run cmake for bls-sigs (This project does not support autotools)
 AC_CONFIG_COMMANDS([src/bls/build],
                    [rm -rf src/bls/build/* || true && \
                     mkdir -p src/bls/build || true && \
+                    echo PREFIX: $prefix && \
                     CC=$CC \
                     CMAKE_PREFIX_PATH=$prefix \
                     CXX=$CXX \
@@ -1344,7 +1345,7 @@ AC_CONFIG_COMMANDS([src/bls/build],
                     printf 'check:\n\techo\n\n' >> src/bls/build/Makefile && \
                     printf 'distdir:\n\techo\n\n' >> src/bls/build/Makefile && \
                     printf 'distclean:\n\techo\n\n' >> src/bls/build/Makefile],
-                   [prefix=$prefix
+                   [prefix="$depends_prefix $prefix"
                     CC=$BLS_CC_RAW
                     CXX=$BLS_CXX_RAW
                     CFLAGS=$BLS_CFLAGS
