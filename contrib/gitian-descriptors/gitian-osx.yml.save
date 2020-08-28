@@ -109,9 +109,7 @@ script: |
 
   # Create the release tarball using (arbitrarily) the first host
   ./autogen.sh
-  echo ls / `ls /`
-  echo ls /lib `ls /lib`
-  echo ls /include `ls /include`
+  echo ls /
   CONFIG_SITE=${BASEPREFIX}/`echo "${HOSTS}" | awk '{print $1;}'`/share/config.site ./configure --prefix=/
   make dist
   SOURCEDIST=`echo navcoin-*.tar.gz`
