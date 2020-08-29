@@ -22,7 +22,7 @@ define $(package)_config_cmds
 endef
 
 define $(package)_build_cmds
-  cat src/libsodium/Makefile && $(MAKE)
+  cat src/libsodium/Makefile && $(MAKE) VERBOSE=1
 endef
 
 define $(package)_stage_cmds
