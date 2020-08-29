@@ -22,7 +22,7 @@ define $(package)_config_cmds
 endef
 
 define $(package)_build_cmds
-  echo AAAAA; cat MAkefile; $(MAKE)
+  echo AAAAA; cat Makefile; $(MAKE)
 endef
 
 define $(package)_stage_cmds
