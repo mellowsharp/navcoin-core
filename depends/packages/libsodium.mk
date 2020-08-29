@@ -14,10 +14,10 @@ define $(package)_preprocess_cmds
 endef
 
 define $(package)_config_cmds
-  $($(package)_autoconf) --enable-static --disable-shared --with-pic=yes && \
-  cd $($(package)_build_subdir && \
-  ls && \
-  echo AAAAAAAA && \
+  $($(package)_autoconf) --enable-static --disable-shared --with-pic=yes; \
+  cd $($(package)_build_subdir; \
+  ls; \
+  echo AAAAAAAA; \
   cat Makefile
 endef
 
