@@ -15,6 +15,9 @@ endef
 
 define $(package)_config_cmds
   $($(package)_autoconf) --enable-static --disable-shared --with-pic=yes
+  ls
+  echo AAAAAAAA
+  cat Makefile
 endef
 
 define $(package)_build_cmds
