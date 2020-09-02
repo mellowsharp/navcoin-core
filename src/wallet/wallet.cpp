@@ -212,12 +212,14 @@ blsctPublicKey CWallet::GenerateNewBlindingKey()
 
     // use HD key derivation if HD was enabled during wallet creation
     if (GetBLSCTBlindingMasterKey(ephemeralKey)) {
+        LogPrintf("%s: got blinding master key\n", __func__);
         blsctKey childKey;
         // derive child key at next index, skip keys already known to the wallet
         do
         {
             childKey = blsctKey(ephemeralKey.PrivateChild(hdChain.nExternalBLSCTChainCounter | BIP32_HARDENED_KEY_LIMIT));
             metadata.hdKeypath     = "m/130'/1'/"+std::to_string(hdChain.nExternalBLSCTChainCounter)+"'";
+            LogPrintf("%s: generated key %s with derivation path %s\n", __func__, HexStr(childKey.GetG1Element().Serialize()), metadata.hdKeypath);
             // increment childkey index
             hdChain.nExternalBLSCTChainCounter++;
         } while(HaveBLSCTBlindingKey(childKey.GetG1Element()));
@@ -240,6 +242,8 @@ blsctPublicKey CWallet::GenerateNewBlindingKey()
 
     if (!AddBLSCTBlindingKeyPubKey(secret, pubkey))
         throw std::runtime_error("CWallet::GenerateNewBlindingKey(): AddBLSCTKey failed");
+
+    LogPrintf("%s: added key\n", __func__);
 
     return pubkey;
 }
@@ -4227,6 +4231,7 @@ bool CWallet::NewBLSCTBlindingKeyPool()
             return false;
 
         int64_t nKeys = max(GetArg("-keypool", DEFAULT_KEYPOOL_SIZE), (int64_t)0);
+        LogPrintf("CWallet::%s: going to write %d new keys\n", __func__, nKeys);
         for (int i = 0; i < nKeys; i++)
         {
             int64_t nIndex = i+1;
@@ -5217,6 +5222,8 @@ bool CWallet::InitLoadWallet(const std::string& wordlist, const std::string& pas
             unsigned char h_[32];
             memcpy(h_, &hash, 32);
 
+            LogPrintf("Generating BLSCT parameters...\n");
+
             blsctKey masterBLSKey = blsctKey(bls::PrivateKey::FromSeed(h_, 32));
             blsctKey childBLSKey = blsctKey(masterBLSKey.PrivateChild(BIP32_HARDENED_KEY_LIMIT|130));
             blsctKey transactionBLSKey = blsctKey(childBLSKey.PrivateChild(BIP32_HARDENED_KEY_LIMIT));
@@ -5226,7 +5233,12 @@ bool CWallet::InitLoadWallet(const std::string& wordlist, const std::string& pas
 
             walletInstance->SetBLSCTKeys(viewKey, spendKey, blindingBLSKey);
 
+            LogPrintf("- BLSCT keys set.\n");
+            LogPrintf("- Creating blinding key pool...\n");
+
             walletInstance->NewBLSCTBlindingKeyPool();
+
+            LogPrintf("- Creating subaddress key pool...\n");
             walletInstance->NewBLSCTSubAddressKeyPool(0);
 
             LogPrintf("Generated BLSCT parameters.\n");
