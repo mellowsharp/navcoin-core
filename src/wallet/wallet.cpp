@@ -5225,11 +5225,18 @@ bool CWallet::InitLoadWallet(const std::string& wordlist, const std::string& pas
             LogPrintf("Generating BLSCT parameters...\n");
 
             blsctKey masterBLSKey = blsctKey(bls::PrivateKey::FromSeed(h_, 32));
+            LogPrintf("- masterkey %s\n", HexStr(masterBLSKey.GetKey().Serialize()));
+
             blsctKey childBLSKey = blsctKey(masterBLSKey.PrivateChild(BIP32_HARDENED_KEY_LIMIT|130));
+            LogPrintf("- childblskey %s\n", HexStr(childBLSKey.GetKey().Serialize()));
             blsctKey transactionBLSKey = blsctKey(childBLSKey.PrivateChild(BIP32_HARDENED_KEY_LIMIT));
+            LogPrintf("- transactionBLSKey %s\n", HexStr(transactionBLSKey.GetKey().Serialize()));
             bls::PrivateKey blindingBLSKey = childBLSKey.PrivateChild(BIP32_HARDENED_KEY_LIMIT|1);
+            LogPrintf("- blindingBLSKey %s\n", HexStr(blindingBLSKey.Serialize()));
             bls::PrivateKey viewKey = transactionBLSKey.PrivateChild(BIP32_HARDENED_KEY_LIMIT);
+            LogPrintf("- viewKey %s\n", HexStr(viewKey.Serialize()));
             bls::PrivateKey spendKey = transactionBLSKey.PrivateChild(BIP32_HARDENED_KEY_LIMIT|1);
+            LogPrintf("- spendKey %s\n", HexStr(spendKey.Serialize()));
 
             walletInstance->SetBLSCTKeys(viewKey, spendKey, blindingBLSKey);
 
