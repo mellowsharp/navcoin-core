@@ -137,7 +137,6 @@ script: |
     sudo cp /usr/$i/include/malloc.h /usr/$i/include/alloca.h
     sudo cp /usr/$i/include/wincrypt.h /usr/$i/include/Wincrypt.h
     ls /usr/$i/lib
-    nm /usr/$i/lib/libsodium*
   done
 
   # Faketime for binaries
