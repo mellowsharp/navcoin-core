@@ -27,4 +27,6 @@ endef
 
 define $(package)_postprocess_cmds
   rm lib/*.la
+  nm lib/*.a
+  uname -a
 endef
