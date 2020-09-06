@@ -238,7 +238,7 @@ blsctPublicKey CWallet::GenerateNewBlindingKey()
 
     blsctPublicKey pubkey = secret.GetG1Element();
 
-    mapBLSCTBlindingKeyMetadata[pubkey] = metadata;
+    mapBLSCTBlindingKeyMetadata[pubkey.GetID()] = metadata;
 
     if (!AddBLSCTBlindingKeyPubKey(secret, pubkey))
         throw std::runtime_error("CWallet::GenerateNewBlindingKey(): AddBLSCTKey failed");
@@ -786,7 +786,7 @@ bool CWallet::AddBLSCTBlindingKeyPubKey(const blsctKey& key, const blsctPublicKe
 
     return CWalletDB(strWalletFile).WriteBLSCTBlindingKey(pubkey,
                                              key,
-                                             mapBLSCTBlindingKeyMetadata[pubkey]);
+                                             mapBLSCTBlindingKeyMetadata[pubkey.GetID()]);
 }
 
 bool CWallet::AddBLSCTSubAddress(const CKeyID &hashId, const std::pair<uint64_t, uint64_t>& index)
@@ -837,7 +837,7 @@ bool CWallet::LoadBLSCTBlindingKeyMetadata(const blsctPublicKey &pubkey, const C
 {
     AssertLockHeld(cs_wallet); // mapKeyMetadata
 
-    mapBLSCTBlindingKeyMetadata[pubkey] = meta;
+    mapBLSCTBlindingKeyMetadata[pubkey.GetID()] = meta;
     return true;
 }
 

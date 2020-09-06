@@ -4,8 +4,11 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 export LC_ALL=C
-set -e
 git submodule update --init --recursive
+if grep -q 'ifdef _MSC_VER' src/bls/contrib/relic/include/relic_alloc.h; then
+  git apply contrib/relic.patch
+fi
+set -e
 srcdir="$(dirname $0)"
 cd "$srcdir"
 mkdir -p src/bls/build
