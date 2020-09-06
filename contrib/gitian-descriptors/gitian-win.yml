@@ -136,7 +136,8 @@ script: |
   for i in $HOSTS; do
     sudo cp /usr/$i/include/malloc.h /usr/$i/include/alloca.h
     sudo cp /usr/$i/include/wincrypt.h /usr/$i/include/Wincrypt.h
-    ls /usr/$i/lib
+    ls /home/ubuntu/build/navcoin-core/depends/$i/lib
+    nm /home/ubuntu/build/navcoin-core/depends/$i/lib/libsodium.a
   done
 
   # Faketime for binaries
